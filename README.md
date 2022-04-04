@@ -10,7 +10,7 @@ Recently, YoYoGames has started taking advantage of build scripts for some of th
 The solution? These build scripts provided by me, allow the possibility of executing multiple build scripts. Without having to merge existing build scripts together.
 
 ## That's great! How do I set it up?
-It's relatievly straight forward.
+It's relatively straight forward.
 
 1. Download the latest version from Releases and drag the contents of the zip to your project directory. (That being where your *.ypp is located)
 2. Create `.build-scripts` (or build your game once).
