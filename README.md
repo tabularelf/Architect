@@ -18,7 +18,7 @@ It's relatively straight forward.
 4. Drag your existing (or future) build scripts into said folder. Repeat from step 3. until done.
 5. Run your game.
 
-Your build scripts will execute in alphabetical order, one step script at a time.
+Your build scripts will execute in alphabetical order, one script at a time.
 
 ## What if I want to run a set of scripts BEFORE everything else?
 The best way to guaranteed priority execution, is to rename your folder to have a `.` at the start.
