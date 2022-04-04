@@ -5,7 +5,7 @@
 A bit of back peddling. GameMaker has recently introduced a way for batch/shell files to be executed while the project is being compiled, in 2 separate stages.
 With it running for either run or package. Or build for both. The problem? GameMaker doesn't have a way of executing more than one set of build scripts. This isn't really a problem unless you want to use someone elses build scripts, right? 
 
-Recently, YoYoGames has started taking advantage of build scripts for some of their extensions. (i.e. steamworks extension). And other libraries (like upcoming @jujuAdams dyanmo) also require build scripts to properly function.
+Recently, YoYoGames has started taking advantage of build scripts for some of their extensions. (i.e. steamworks extension). And other libraries (like upcoming @jujuAdams dynamo) also require build scripts to properly function.
 
 The solution? These build scripts provided by me, allow the possibility of executing multiple build scripts. Without having to merge existing build scripts together.
 
