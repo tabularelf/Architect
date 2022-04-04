@@ -26,3 +26,6 @@ Alternatively, you may make a `.pre-build` or `.post-build` in your project dire
 
 `pre_run_step.bat/pre_build_step.bat/pre_package_step.bat` -> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.pre-build`
 `post_run_step.bat/post_build_step.bat/post_package_step.bat `-> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.post-build` 
+
+## Is MacOSX/Linux supported?
+As of yet no, but I am working towards adding support to both platforms.
