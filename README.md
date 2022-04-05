@@ -24,8 +24,8 @@ Your build scripts will execute in alphabetical order, one script at a time.
 The best way to guaranteed priority execution, is to rename your folder to have a `.` at the start.
 Alternatively, you may make a `.pre-build` or `.post-build` in your project directory and use the following name scheme and add build scripts as such.
 
-`pre_run_step.bat/pre_build_step.bat/pre_package_step.bat` -> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.pre-build`
-`post_run_step.bat/post_build_step.bat/post_package_step.bat `-> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.post-build` 
+`pre_run_step.bat/pre_build_step.bat/pre_package_step.bat` -> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.pre-build\script_name.ext`
+`post_run_step.bat/post_build_step.bat/post_package_step.bat `-> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.post-build\script_name.ext` 
 
 ## Is MacOSX/Linux supported?
 As of yet no, but I am working towards adding support to both platforms.
