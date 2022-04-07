@@ -6,30 +6,30 @@ then
 	echo "Architect: .build-scripts doesn't exist. Creating..."
 fi
 
-echo "Architect: Executing pre-run scripts."
+echo "Architect: Executing post-build scripts."
 readarray -d '' entries < <(printf '%s\0' "$YYprojectDir/.build-scripts"/* | sort -zV)
 for f in "${entries[@]}"; do
 	if [ -d "$f" ]; then 
-		if [ -f "$f/pre_run_step.sh" ]; then
+		if [ -f "$f/post_build_step.sh" ]; then
 			# Lets make sure that we can execute shell
-			if [ ! -x "$f/pre_run_step.sh" ]; then
-				chmod u+x "$f/pre_run_step.sh"
+			if [ ! -x "$f/post_build_step.sh" ]; then
+				chmod u+x "$f/post_build_step.sh"
 			fi
-			$f/pre_run_step.sh
+			$f/post_build_step.sh
 		fi
 	fi
 done
 
-echo "Architect: Executing pre-build scripts."
+echo "Architect: Executing post-run scripts."
 readarray -d '' entries < <(printf '%s\0' "$YYprojectDir/.build-scripts"/* | sort -zV)
 for f in "${entries[@]}"; do
 	if [ -d "$f" ]; then 
-		if [ -f "$f/pre_build_step.sh" ]; then
+		if [ -f "$f/post_run_step.sh" ]; then
 			# Lets make sure that we can execute shell
-			if [ ! -x "$f/pre_build_step.sh" ]; then
-				chmod u+x "$f/pre_build_step.sh"
+			if [ ! -x "$f/post_run_step.sh" ]; then
+				chmod u+x "$f/post_run_step.sh"
 			fi
-			$f/pre_build_step.sh
+			$f/post_run_step.sh
 		fi
 	fi
 done
