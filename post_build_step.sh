@@ -2,9 +2,11 @@
 
 # ===Architect===
 
-# Paths are being cleared for some reason so we're going to manually inject it.
+# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.
 if [[ "$OSTYPE" == "darwin"* ]]; then
-export PATH=$PATH:/usr/local/opt/neko/bin
+	export PATH=$PATH:/usr/local/opt/neko/bin
+
+fi
 
 pushd "$YYprojectDir"
 neko ./architect.n -post -build
