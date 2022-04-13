@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"obj_squares","path":"objects/obj_squares/obj_squares.yy",},"order":3,},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},"order":1,},
   ],
   "Options": [
@@ -15,7 +16,7 @@
     {"name":"Windows UWP","path":"options/windowsuap/options_windowsuap.yy",},
     {"name":"operagx","path":"options/operagx/options_operagx.yy",},
   ],
-  "defaultScriptType": 0,
+  "defaultScriptType": 1,
   "isEcma": false,
   "configs": {
     "name": "Default",
@@ -33,7 +34,7 @@
   ],
   "IncludedFiles": [],
   "MetaData": {
-    "IDEVersion": "2022.3.0.624",
+    "IDEVersion": "2022.3.0.625",
   },
   "resourceVersion": "1.5",
   "name": "Build-Script-Manager",
