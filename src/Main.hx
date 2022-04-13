@@ -237,11 +237,11 @@ class Main {
 			_postPackageShell += "# ===Architect===\n\n";
 			
 			// Check .build-script state
-			if (!sys.FileSystem.exists(_path + "/.build-scripts")) {
-				__archTrace("Directory /.build_scripts doesn't exist. Creating...");
-				sys.FileSystem.createDirectory(_path + "/.build-scripts");
+			if (!sys.FileSystem.exists(_path + "/build-scripts")) {
+				__archTrace("Directory /build_scripts/ doesn't exist. Creating...");
+				sys.FileSystem.createDirectory(_path + "/build-scripts");
 			} else {
-				__archTrace("Directory /.build_scripts exists!");
+				__archTrace("Directory /build_scripts/ exists!");
 			}
 			
 			// ==Windows==
