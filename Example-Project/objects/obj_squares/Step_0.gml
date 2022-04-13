@@ -1,2 +1,3 @@
-//show_debug_message("\a");
-show_debug_message("Hi! " + _id);
+if keyboard_check_released(ord("Q")) {
+	show_debug_message(_id);
+}

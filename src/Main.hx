@@ -92,6 +92,8 @@ class Main {
 						buildTypeStr = args[_i].substring(1);
 					case "-enforcecreate":
 						enforceShells = true;
+					//case "-ignore":
+					//	ignoreFiles = true;
 				}
 				++_i;
 			}
@@ -109,11 +111,33 @@ class Main {
 				So you're going to have to deal with it! (I might change it over later but dunno.)
 			*/
 			
+			var _MacOSSafetyInjection:String = "# Paths are being cleared for some reason on MacOS, for every single build script!!!\n# So we're going to manually give back paths.\n# In the event that fails, we'll inject neko in manually. Please ensure that you have neko in your PATH.\n";
+			_MacOSSafetyInjection += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
+			_MacOSSafetyInjection += "	source ~/.bash_profile\n";
+			_MacOSSafetyInjection += "	if [[ $? ]]; then\n";
+			_MacOSSafetyInjection += "		# We're going to try another.\n";
+			_MacOSSafetyInjection += "		source ~/.bashrc\n";
+			_MacOSSafetyInjection += " 	fi\n";
+			_MacOSSafetyInjection += "	if [[ $? ]]; then\n";
+			_MacOSSafetyInjection += "	# We're exposing neko manually. Most users will have it in the default path.\n";
+			_MacOSSafetyInjection += "		export PATH=$PATH:/usr/local/opt/neko/bin\n";
+			_MacOSSafetyInjection += "	fi\n";
+			_MacOSSafetyInjection += "fi\n\n";
+			
+			var _shellErrorDetection:String = "if [[ $? != 0 ]]; then\n";
+			_shellErrorDetection += "	exit $?\n";
+			_shellErrorDetection += "fi\n";
+			
+			var _batchErrorDetection:String = "if %ERRORLEVEL% NEQ 0 (\n";
+			_batchErrorDetection += "	exit %ERRORLEVEL%\n";
+			_batchErrorDetection += ")\n";
+			
 			// Windows
 			var _preRunBat:String = "@echo off\n\n";
 			_preRunBat += "rem ===Architect===\n\n";
 			_preRunBat += "pushd \"%YYprojectDir%\"\n";
 			_preRunBat += "start /B /wait  \"\" architect.exe -pre -run\n";
+			_preRunBat += _batchErrorDetection;
 			_preRunBat += "popd\n\n";
 			_preRunBat += "rem ===Architect===\n\n";
 			
@@ -121,6 +145,7 @@ class Main {
 			_preBuildBat += "rem ===Architect===\n\n";
 			_preBuildBat += "pushd \"%YYprojectDir%\"\n";
 			_preBuildBat += "start /B /wait \"\" architect.exe -pre -build\n";
+			_preBuildBat += _batchErrorDetection;
 			_preBuildBat += "popd\n\n";
 			_preBuildBat += "rem ===Architect===\n\n";
 			
@@ -128,6 +153,7 @@ class Main {
 			_prePackageBat += "rem ===Architect===\n\n";
 			_prePackageBat += "pushd \"%YYprojectDir%\"\n";
 			_prePackageBat += "start /B /wait \"\" architect.exe -pre -package\n";
+			_prePackageBat += _batchErrorDetection;
 			_prePackageBat += "popd\n\n";
 			_prePackageBat += "rem ===Architect===\n\n";
 			
@@ -135,6 +161,7 @@ class Main {
 			_postRunBat += "rem ===Architect===\n\n";
 			_postRunBat += "pushd \"%YYprojectDir%\"\n";
 			_postRunBat += "start /B /wait \"\" architect.exe -post -run\n";
+			_postRunBat += _batchErrorDetection;
 			_postRunBat += "popd\n\n";
 			_postRunBat += "rem ===Architect===\n\n";
 			
@@ -142,6 +169,7 @@ class Main {
 			_postBuildBat += "rem ===Architect===\n\n";
 			_postBuildBat += "pushd \"%YYprojectDir%\"\n";
 			_postBuildBat += "start /B /wait \"\" architect.exe -post -build\n";
+			_postBuildBat += _batchErrorDetection;
 			_postBuildBat += "popd\n\n";
 			_postBuildBat += "rem ===Architect===\n\n";
 			
@@ -149,73 +177,62 @@ class Main {
 			_postPackageBat += "rem ===Architect===\n\n";
 			_postPackageBat += "pushd \"%YYprojectDir%\"\n";
 			_postPackageBat += "start /B /wait \"\" architect.exe -post -package\n";
+			_postPackageBat += _batchErrorDetection;
 			_postPackageBat += "popd\n\n";
 			_postPackageBat += "rem ===Architect===\n\n";
 			
 			// Linux/MacOS
 			var _preRunShell:String = "#!/bin/bash\n\n";
 			_preRunShell += "# ===Architect===\n\n";
-			_preRunShell += "# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.\n";
-			_preRunShell += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			_preRunShell += "	export PATH=$PATH:/usr/local/opt/neko/bin\n\n";
-			_preRunShell += "fi\n\n";
+			_preRunShell += _MacOSSafetyInjection;
 			_preRunShell += "pushd \"$YYprojectDir\"\n";
 			_preRunShell += "neko ./architect.n -pre -run\n";
+			_preRunShell += _shellErrorDetection;
 			_preRunShell += "popd\n\n";
 			_preRunShell += "# ===Architect===\n\n";
 			
 			var _preBuildShell:String = "#!/bin/bash\n\n";
 			_preBuildShell += "# ===Architect===\n\n";
-			_preBuildShell += "# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.\n";
-			_preBuildShell += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			_preBuildShell += "	export PATH=$PATH:/usr/local/opt/neko/bin\n\n";
-			_preBuildShell += "fi\n\n";
+			_preBuildShell += _MacOSSafetyInjection;
 			_preBuildShell += "pushd \"$YYprojectDir\"\n";
 			_preBuildShell += "neko ./architect.n -pre -build\n";
+			_preBuildShell += _shellErrorDetection;
 			_preBuildShell += "popd\n\n";
 			_preBuildShell += "# ===Architect===\n\n";
 			
 			var _prePackageShell:String = "#!/bin/bash\n\n";
 			_prePackageShell += "# ===Architect===\n\n";
-			_prePackageShell += "# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.\n";
-			_prePackageShell += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			_prePackageShell += "	export PATH=$PATH:/usr/local/opt/neko/bin\n\n";
-			_prePackageShell += "fi\n\n";
+			_prePackageShell += _MacOSSafetyInjection;
 			_prePackageShell += "pushd \"$YYprojectDir\"\n";
 			_prePackageShell += "neko ./architect.n -pre -package\n";
+			_prePackageShell += _shellErrorDetection;
 			_prePackageShell += "popd\n\n";
 			_prePackageShell += "# ===Architect===\n\n";
 			
 			var _postRunShell:String = "#!/bin/bash\n\n";
 			_postRunShell += "# ===Architect===\n\n";
-			_postRunShell += "# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.\n";
-			_postRunShell += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			_postRunShell += "	export PATH=$PATH:/usr/local/opt/neko/bin\n\n";
-			_postRunShell += "fi\n\n";
+			_postRunShell += _MacOSSafetyInjection;
 			_postRunShell += "pushd \"$YYprojectDir\"\n";
 			_postRunShell += "neko ./architect.n -post -run\n";
+			_postRunShell += _shellErrorDetection;
 			_postRunShell += "popd\n\n";
 			_postRunShell += "# ===Architect===\n\n";
 			
 			var _postBuildShell:String = "#!/bin/bash\n\n";
 			_postBuildShell += "# ===Architect===\n\n";
-			_postBuildShell += "# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.\n";
-			_postBuildShell += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			_postBuildShell += "	export PATH=$PATH:/usr/local/opt/neko/bin\n\n";
-			_postBuildShell += "fi\n\n";
+			_postBuildShell += _MacOSSafetyInjection;
 			_postBuildShell += "pushd \"$YYprojectDir\"\n";
 			_postBuildShell += "neko ./architect.n -post -build\n";
+			_postBuildShell += _shellErrorDetection;
 			_postBuildShell += "popd\n\n";
 			_postBuildShell += "# ===Architect===\n\n";
 			
 			var _postPackageShell:String = "#!/bin/bash\n\n";
 			_postPackageShell += "# ===Architect===\n\n";
-			_postPackageShell += "# Paths are being cleared for some reason on MacOS, so we're going to manually inject neko into it.\n";
-			_postPackageShell += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			_postPackageShell += "	export PATH=$PATH:/usr/local/opt/neko/bin\n\n";
-			_postPackageShell += "fi\n\n";
+			_postPackageShell += _MacOSSafetyInjection;
 			_postPackageShell += "pushd \"$YYprojectDir\"\n";
 			_postPackageShell += "neko ./architect.n -post -package\n";
+			_postPackageShell += _shellErrorDetection;
 			_postPackageShell += "popd\n\n";
 			_postPackageShell += "# ===Architect===\n\n";
 			
@@ -287,25 +304,30 @@ class Main {
 				case stageType.Pre:
 					switch(buildType) {
 						case BuildType.Run:
-						__archTrace("Step: ===1/3===");
+						__archTrace("Step: ===1/4===");
 						case BuildType.Package:
-						__archTrace("Step: ===1/3===");
+						__archTrace("Step: ===1/4===");
 						case BuildType.Build:
-						__archTrace("Step: ===2/3===");
+						__archTrace("Step: ===2/4===");
 						default:
+						__archTrace("Executed in invalid state. Exiting...");
 						Sys.exit(1);
 						
 					}
 				case stageType.Post:
 					switch(buildType) {
 						case BuildType.Run:
-						__archTrace("Step: ===3/3===");
+						__archTrace("Step: ===4/4===");
 						case BuildType.Package:
-						__archTrace("Step: ===3/3===");
+						__archTrace("Step: ===4/4===");
+						case BuildType.Build:
+						__archTrace("Step: ===3/4===");
 						default:
+						__archTrace("Executed in invalid state. Exiting...");
 						Sys.exit(1);
 					}
 				default:
+				__archTrace("Executed in invalid state. Exiting...");
 				Sys.exit(1);
 			}
 			
