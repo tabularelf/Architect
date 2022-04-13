@@ -1,4 +1,4 @@
-# Build Script Manager v1.0.0
+# Architet v0.5.0
  A mini set of build scripts that allow multiple build script execution in GameMaker.
 
 ## Why does this exist?
