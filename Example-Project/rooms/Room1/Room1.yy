@@ -46,8 +46,8 @@
     "PhysicsWorldPixToMetres": 0.1,
   },
   "parent": {
-    "name": "Build-Script-Manager",
-    "path": "Build-Script-Manager.yyp",
+    "name": "architect",
+    "path": "architect.yyp",
   },
   "resourceVersion": "1.0",
   "name": "Room1",
