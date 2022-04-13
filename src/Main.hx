@@ -113,15 +113,15 @@ class Main {
 			
 			var _MacOSSafetyInjection:String = "# Paths are being cleared for some reason on MacOS, for every single build script!!!\n# So we're going to manually give back paths.\n# In the event that fails, we'll inject neko in manually. Please ensure that you have neko in your PATH.\n";
 			_MacOSSafetyInjection += "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then\n";
-			/*_MacOSSafetyInjection += "	source ~/.bash_profile\n";
+			_MacOSSafetyInjection += "	source ~/.bash_profile\n";
 			_MacOSSafetyInjection += "	if [[ $? ]]; then\n";
 			_MacOSSafetyInjection += "		# We're going to try another.\n";
 			_MacOSSafetyInjection += "		source ~/.bashrc\n";
 			_MacOSSafetyInjection += " 	fi\n";
 			_MacOSSafetyInjection += "	if [[ $? ]]; then\n";
-			_MacOSSafetyInjection += "	# We're exposing neko manually. Most users will have it in the default path.\n";*/
+			_MacOSSafetyInjection += "	# We're exposing neko manually. Most users will have it in the default path.\n";
 			_MacOSSafetyInjection += "		export PATH=$PATH:/usr/local/opt/neko/bin\n";
-			//_MacOSSafetyInjection += "	fi\n";
+			_MacOSSafetyInjection += "	fi\n";
 			_MacOSSafetyInjection += "fi\n\n";
 			
 			var _shellErrorDetection:String = "if [[ $? != 0 ]]; then\n";
@@ -331,7 +331,7 @@ class Main {
 				Sys.exit(1);
 			}
 			
-			var list = getEntries(Sys.getCwd() + "/.build-scripts/");
+			var list = getEntries(Sys.getCwd() + "/build-scripts/");
 			list.sort(function(a, b) {
 				if(a > b) return -1;
 				else if(a < b) return 1;
