@@ -374,13 +374,14 @@ class Main {
 			if (Sys.systemName() == "Windows") {
 				_fileExt = ".bat";
 			}
-			
+			var _isWindows = Sys.systemName() == "Windows";
 			var _fileName:String = stageTypeStr + "_" + buildTypeStr + "_step" + _fileExt;
 			while (list.length > 0) {
 				var _filePath = list.pop();
 				if (Global.verbose) __archTrace("Checking directory: " + _filePath);
 				if (sys.FileSystem.exists(_filePath + "/" + _fileName)) {
 					if (Global.verbose) __archTrace("File \"" + _fileName + "\" exists!");
+					if (!_isWindows) Sys.command("chmod u+x " + _filePath + "/" + _fileName);
 					__archTrace("Running file at: " + _filePath + "/" + _fileName);
 					var _exitCode = Sys.command("\"" + _filePath + "/" + _fileName + "\"");
 					if (_exitCode != 0) {
