@@ -20,6 +20,12 @@ abstract BuildInfo(String) {
 	var Version = "v0.5.0";
 }
 
+class Global {
+	public static var verbose = false;
+	public static var ignoreFiles = false;
+	public static var forceReplace = false;
+}
+
 class Main {
 	static function getEntries(dir:String, entries:Null<Array<String>> = null, inDir:Null<String> = null) {
 		if (entries == null) entries = new Array();
@@ -38,38 +44,59 @@ class Main {
 	}
 	
 	static function __archCreateExec(path:String, file:String, type:String) {
-			if (sys.FileSystem.exists(path + "/" + file)) {
-				var _contents = sys.io.File.getContent(path + "/" + file);
-				__archTrace(file + " exists! Injecting...");
-				if (StringTools.contains(_contents, "===Architect===")) {
-					__archTrace(file + " contains Architect: Please clear out the batch/shell files and run again.");
-					Sys.exit(1);
+			var _fileExists = sys.FileSystem.exists(path + "/" + file);
+			if ((_fileExists == true) && (Global.forceReplace != true)) {
+				if (Global.ignoreFiles == false) {
+					var _contents = sys.io.File.getContent(path + "/" + file);
+					__archTrace(file + " exists! Injecting...");
+					if (StringTools.contains(_contents, "===Architect===")) {
+						__archTrace(file + " contains Architect! Please clear out the batch/shell files and run again.");
+						Sys.exit(1);
+					}
+					
+					if (StringTools.contains(_contents, "#!/bin/bash")) {
+						if (Global.verbose) __archTrace("Stripping all traces of #!/bin/bash");
+						_contents = StringTools.replace(_contents, "#!/bin/bash", "");
+					}
+					sys.io.File.saveContent(path + "/" + file, type + _contents);
+				} else {
+					if (Global.verbose) __archTrace(file + " exists! Skipping...");
 				}
-				sys.io.File.saveContent(path + "/" + file, type + _contents);
 			} else {
-				__archTrace(file + " doesn't exist! Creating...");
+				if ((_fileExists == true) && (Global.forceReplace == true)) {
+					__archTrace(file + " exists! forceReplace is enabled... Replacing...");	
+				} else if (_fileExists == false) {
+					__archTrace(file + " doesn't exist! Creating...");
+				}
 				sys.io.File.saveContent(path + "/" + file, type);
 				if ((Sys.systemName() != "Windows") && StringTools.contains(file, ".sh")) Sys.command("chmod u+x " + path + "/" + file);
 			}
 	}
 	
+	static function __help() {
+		__archTrace(BuildInfo.Version + " - " + BuildInfo.Credits);
+		Sys.println("===Help===");
+		Sys.println("Repo: https://github.com/tabularelf/Architect\n");
+		Sys.println("Arguments:\n-help | What you're seeing right now.\n-ignore | Tells Architect to ignore existing shell/batch files.\n-verbose -v | Gives extra information in the output log.\n-forceReplace | Forces Architect to replace existing batch/shell scripts.\n-forceCreate | Forces Architect to create batch/shell scripts.\n\n===Intended to be used by Architect only!===\n-pre -post | Determines the start/end of the compiling.\n-run -package -build | Determines what type of script to run between each stage in compiling.");
+	}
+	
 	static function main() {
-		// Start
+		// Start	
 		var stageType = StageType.Null;
 		var buildType = BuildType.Null;
-		var verbose = false;
 		var buildTypeStr = "";
 		var stageTypeStr = "";
 		var enforceShells = false;
+
 		
 		var args = Sys.args();
 		var _i = 0;
 		while(_i < args.length) {
 				switch(args[_i].toLowerCase()) {
 					case "-v": 
-						verbose = true;
+						Global.verbose = true;
 					case "-verbose":
-						verbose = true;
+						Global.verbose = true;
 				
 					// Get StageType
 					case "-pre":
@@ -90,10 +117,15 @@ class Main {
 					case "-build":
 						buildType = BuildType.Build;
 						buildTypeStr = args[_i].substring(1);
-					case "-enforcecreate":
+					case "-forcecreate":
 						enforceShells = true;
-					//case "-ignore":
-					//	ignoreFiles = true;
+					case "-help":
+						__help();
+						Sys.exit(0);
+					case "-ignore":
+						Global.ignoreFiles = true;
+					case "-forcereplace": 
+						Global.forceReplace = true;
 				}
 				++_i;
 			}
@@ -346,9 +378,9 @@ class Main {
 			var _fileName:String = stageTypeStr + "_" + buildTypeStr + "_step" + _fileExt;
 			while (list.length > 0) {
 				var _filePath = list.pop();
-				if (verbose) __archTrace("Checking directory: " + _filePath);
+				if (Global.verbose) __archTrace("Checking directory: " + _filePath);
 				if (sys.FileSystem.exists(_filePath + "/" + _fileName)) {
-					if (verbose) __archTrace("File \"" + _fileName + "\" exists!");
+					if (Global.verbose) __archTrace("File \"" + _fileName + "\" exists!");
 					__archTrace("Running file at: " + _filePath + "/" + _fileName);
 					var _exitCode = Sys.command("\"" + _filePath + "/" + _fileName + "\"");
 					if (_exitCode != 0) {
