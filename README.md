@@ -12,20 +12,16 @@ The solution? These build scripts provided by me, allow the possibility of execu
 ## That's great! How do I set it up?
 It's relatively straight forward.
 
-1. Download the latest version from Releases and drag the contents of the zip to your project directory. (That being where your *.ypp is located)
-2. Create `.build-scripts` (or build your game once).
-3. Create a new folder within `.build-scripts` with whatever name you'd like, for each and every build scripts from a library/extension that you need. i.e. `steamworks` for steamworks build scripts.
-4. Drag your existing (or future) build scripts into said folder. Repeat from step 3. until done.
-5. Run your game.
+1. Download the latest version from Releases (architect.exe for Windows, architect.n for MacOS/Linux) and put into the root directory of your project.
+**For MacOSX/Linux Users:** Download and install Neko VM. (https://nekovm.org/download/) (~/.bash_profile or ~/.bashrc) before using Architect!
+Additional notes for **MacOSX** Users: Please add `/usr/local/opt/neko/bin` to your paths globally.
+2. Run architect.exe (MacOSX/Linux type `neko architect.n` in terminal.) You may provide `-help` to see additional arguments.\
+Notes: By default, Architect only creates build scripts for the respective OS. You want to provide `-forceCreate` to force Architect to create batch/shell files.
+3. Architect will create a new folder called `build-scripts`. Put your build-scripts in their own respective folder. (i.e. steamworks).
+4. Build/run your game.
 
 Your build scripts will execute in alphabetical order, one script at a time.
 
 ## What if I want to run a set of scripts BEFORE everything else?
-The best way to guaranteed priority execution, is to rename your folder to have a `.` at the start.
-Alternatively, you may make a `.pre-build` or `.post-build` in your project directory and use the following name scheme and add build scripts as such.
-
-`pre_run_step.bat/pre_build_step.bat/pre_package_step.bat` -> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.pre-build\script_name.ext`
-`post_run_step.bat/post_build_step.bat/post_package_step.bat `-> `script_name.run.bat/script_name.build.bat/script_name.package.bat` -> `.post-build\script_name.ext` 
-
-## Is MacOSX/Linux supported?
-As of yet no, but I am working towards adding support to both platforms.
+The best way to guaranteed priority execution, is to rename your folder to have a `.` at the start. 
+i.e. `.RunFirst` will run first before any other build scripts.
