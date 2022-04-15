@@ -12,7 +12,7 @@ The solution? These build scripts provided by me, allow the possibility of execu
 ## That's great! How do I set it up?
 It's relatively straight forward.
 
-1. Download the latest version from Releases (architect.exe for Windows, architect.n for MacOS/Linux) and put into the root directory of your project.
+1. Download the latest version from Releases (architect.zip) and put into the root directory of your project.
 **For MacOSX/Linux Users:** Download and install Neko VM. (https://nekovm.org/download/) (~/.bash_profile or ~/.bashrc) before using Architect!
 Additional notes for **MacOSX** Users: Please add `/usr/local/opt/neko/bin` to your paths globally.
 2. Run architect.exe (MacOSX/Linux type `neko architect.n` in terminal.) You may provide `-help` to see additional arguments.\
