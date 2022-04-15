@@ -1,5 +1,5 @@
 # Architect v0.5.0
- A mini set of build scripts that allow multiple build script execution in GameMaker.
+ A build tool that allow multiple build script execution in GameMaker.
 
 ## Why does this exist?
 A bit of back peddling. GameMaker has recently introduced a way for batch/shell files to be executed while the project is being compiled, in 2 separate stages.
